@@ -1,0 +1,19 @@
+extends ../common/layout
+
+block layout-content
+  h1.mb-4 Dashboard
+
+  .row.g-3
+    .col-md-6
+      .card
+        .card-body
+          h5.card-title Total Users
+          p.display-6 #{userCount}
+          a.btn.btn-sm.btn-outline-primary(href="/admin/users") Manage Users
+    .col-md-6
+      .card
+        .card-body
+          h5.card-title Total Posts
+          p.display-6 #{postCount}
+          a.btn.btn-sm.btn-outline-primary(href="/admin/posts") Manage Posts
+

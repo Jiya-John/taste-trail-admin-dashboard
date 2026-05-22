@@ -1,0 +1,23 @@
+{
+  "name": "taste-trail-admin-dashboard",
+  "version": "1.0.0",
+  "description": "This website serves as an admin dashboard for a user facing website where people share posts about their favorite food spots. These posts are public, allowing other users to browse and discover great restaurants, cafes or hangout spots. This website is for maintaining and managing backend tasks.",
+  "license": "ISC",
+  "type": "module",
+  "author": "Jiya John",
+  "main": "index.js",  
+  "scripts": {
+    "dev": "nodemon ./index.js",
+    "app": "node ./index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongodb": "^7.0.0",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
