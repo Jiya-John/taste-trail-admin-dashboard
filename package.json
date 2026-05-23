@@ -5,12 +5,13 @@
   "license": "ISC",
   "type": "module",
   "author": "Jiya John",
-  "main": "index.js",  
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon ./index.js",
     "app": "node ./index.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",

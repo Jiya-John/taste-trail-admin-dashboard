@@ -1,0 +1,34 @@
+extends ../../common/layout
+
+block layout-content
+  h1.mb-3 Users
+  a.btn.btn-primary.mb-3(href="/admin/users/add") + Add User
+
+  if users.length
+    table.table.table-striped.table-hover
+      thead
+        tr
+          tr
+          th Name
+          th Username
+          th Email
+          th City
+          th Status
+          th Actions
+      tbody
+        each user in users
+          tr
+            td #{user.firstName} #{user.lastName}
+            td #{user.username}
+            td #{user.email}
+            td #{user.city}
+            td
+              if user.status === "active"
+                span.badge.bg-success Active
+              else
+                span.badge.bg-danger Inactive
+            td
+              a.btn.btn-sm.btn-outline-secondary(href=`/admin/users/edit?id=${user._id}`) Edit
+              a.btn.btn-sm.btn-outline-secondary(href=`/admin/users/delete?id=${user._id}`) Delete
+  else
+    p.text-muted No users found.

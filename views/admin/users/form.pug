@@ -1,0 +1,55 @@
+extends ../../common/layout
+
+block layout-content
+  h1.mb-3 #{title}
+
+  if error
+    .alert.alert-danger #{error}
+
+  form(method="post", action=formAction)
+    if user._id
+      input(type="hidden", name="id", value=user._id)
+
+    .mb-3
+      label.form-label(for="firstName") First Name
+      input.form-control(type="text", id="firstName", name="firstName", required, value=user.firstName || "")
+
+    .mb-3
+      label.form-label(for="lastName") Last Name
+      input.form-control(type="text", id="lastName", name="lastName", required, value=user.lastName || "")
+
+    .mb-3
+      label.form-label(for="username") Username
+      input.form-control(type="text", id="username", name="username", required, value=user.username || "")
+
+    .mb-3
+      label.form-label(for="email") Email
+      input.form-control(type="email", id="email", name="email", required, value=user.email || "")
+
+    .mb-3
+      label.form-label(for="streetName") Street Name
+      input.form-control(type="text", id="streetName", name="streetName", required, value=user.streetName || "")
+
+    .mb-3
+      label.form-label(for="city") City
+      input.form-control(type="text", id="city", name="city", required, value=user.city || "")
+
+    .mb-3
+      label.form-label(for="province") Province
+      input.form-control(type="text", id="province", name="province", required, value=user.province || "")
+
+    .mb-3
+      label.form-label(for="country") Country
+      input.form-control(type="text", id="country", name="country", required, value=user.country || "")
+
+    .mb-3
+      label.form-label(for="postalCode") Postal Code
+      input.form-control(type="text", id="postalCode", name="postalCode", required, value=user.postalCode || "")
+
+    if !user._id
+      .mb-3
+        label.form-label(for="password") Password
+        input.form-control(type="password", id="password", name="password", required)
+
+    button.btn.btn-primary(type="submit") Save
+    a.btn.btn-secondary.ms-2(href="/admin/users") Cancel
