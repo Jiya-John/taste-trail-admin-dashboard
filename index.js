@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 import session from "express-session";
+import multer from "multer";
 import dns from "node:dns/promises"; 
 dns.setServers(["1.1.1.1"]);
 
@@ -40,8 +41,11 @@ app.use(
   })
 );
 
+// Multer for photo uploads
+const upload = multer({ storage: multer.memoryStorage() });
+
 // Mount routes
-app.use("/admin", adminRoutes(db));
+app.use("/admin", adminRoutes(db, upload));
 
 // Landing page
 app.get("/", (req, res) => {

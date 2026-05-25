@@ -68,5 +68,5 @@ export default function manageUsers(db, requireAdmin) {
     res.redirect("/admin/users");
   });
 
-    return router;
+  return router;
 } 

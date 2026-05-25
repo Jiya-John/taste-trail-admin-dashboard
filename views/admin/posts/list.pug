@@ -1,0 +1,53 @@
+extends ../../common/layout
+
+block layout-content
+  h1.mb-3 Posts
+  a.btn.btn-primary.mb-3(href="/admin/posts/add") + Add Post
+
+  if posts.length
+    table.table.table-striped.table-hover
+      thead
+        tr
+          th Photo
+          th Restaurant
+          th Dish
+          th Rating
+          th Status
+          th Actions
+      tbody
+        each post in posts
+          tr
+            td
+              if post.photo
+                img(
+                  class="post-photo"
+                  src=`data:${post.photoType};base64,${post.photo.toString('base64')}`
+                  alt="Photo"
+                )
+              else
+                span.text-muted No image
+
+            td
+              | #{post.restaurantName}
+              br
+              small.text-muted #{post.restaurantCity}, #{post.restaurantProvince}
+
+            td #{post.dishName}
+
+            td
+              if post.rating
+                span.badge.bg-info #{post.rating} / 5
+              else
+                span.text-muted No rating
+
+            td
+              if post.status === "active"
+                span.badge.bg-success Active
+              else
+                span.badge.bg-danger Inactive
+
+            td
+              a.btn.btn-sm.btn-outline-secondary(href=`/admin/posts/edit?id=${post._id}`) Edit
+              a.btn.btn-sm.btn-outline-secondary(href=`/admin/posts/delete?id=${post._id}`) Delete
+  else
+    p.text-muted No posts found.

@@ -1,14 +1,17 @@
 import { ObjectId } from "mongodb";
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"; // for password hash
 
+// Get Users function
 export async function getUsers(db) {
   return await db.collection("users").find({}).sort({ createdAt: -1 }).toArray();
 }
 
+// Get single users function
 export async function getSingleUser(db, id) {
   return await db.collection("users").findOne({ _id: new ObjectId(id) });
 }
 
+// Add user function
 export async function addUser(db, data) {
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -31,6 +34,7 @@ export async function addUser(db, data) {
   await db.collection("users").insertOne(userDoc);
 }
 
+//Edit user function
 export async function editUser(db, id, data) {
   const update = {
     firstName: data.firstName,
@@ -49,6 +53,7 @@ export async function editUser(db, id, data) {
     .updateOne({ _id: new ObjectId(id) }, { $set: update });
 }
 
+// Delete user function - set status to inactive
 export async function deleteUser(db, id) {
   await db
     .collection("users")
@@ -58,6 +63,7 @@ export async function deleteUser(db, id) {
     });
 }
 
+// Validate user function
 export async function validateUser(db, data, isEdit = false, userId = null) {
     const { firstName, lastName, username, email, streetName, city, province, country, postalCode, password} = data;
 

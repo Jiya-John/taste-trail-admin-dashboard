@@ -2,6 +2,7 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { getUsers, getSingleUser, addUser, editUser, deleteUser, validateUser } from "../db/users.js";
 import manageUsers from "./manageusers.js";
+import managePosts from "./manageposts.js";
 
 export default function adminRoutes(db, upload) {
   const router = express.Router();
@@ -49,6 +50,7 @@ export default function adminRoutes(db, upload) {
   });
 
   router.use("/users", requireAdmin, manageUsers(db, requireAdmin));
+  router.use("/posts", managePosts(db, upload, requireAdmin));
 
   return router;
 }
