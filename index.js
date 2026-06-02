@@ -51,6 +51,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Mount routes
 app.use("/admin", adminRoutes(db, upload));
+app.use("/api", apiRoutes(db, upload));
 
 // Landing page
 app.get("/", (req, res) => {
