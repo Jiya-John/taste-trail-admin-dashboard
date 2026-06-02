@@ -94,14 +94,12 @@ export default function apiRoutes(db, upload) {
   // DELETE post
   router.delete("/posts/:id", async (req, res) => {
     try {
-      await db.collection("posts").deleteOne({
-        _id: new ObjectId(req.params.id)
-      });
-
-      res.json({ success: true });
+      const id = req.params.id;
+      await deletePost(db, id); 
+      res.json({ success: true, message: "Post set to inactive" });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: "Failed to delete post" });
+      res.status(500).json({ error: "Failed to deactivate post" });
     }
   });
 
