@@ -8,6 +8,8 @@ dns.setServers(["1.1.1.1"]);
 
 import { MongoClient } from "mongodb";
 import adminRoutes from "./routes/admin.js";
+import apiRoutes from "./routes/api.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -19,6 +21,9 @@ const db = client.db(process.env.MONGODB_DBNAME);
 
 // Express setup
 const app = express();
+app.use(cors({
+  origin: "*"
+}));
 const port = process.env.PORT || 8888;
 
 // Template engine
