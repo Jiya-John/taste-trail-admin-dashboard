@@ -56,7 +56,7 @@ export default function apiRoutes(db, upload) {
         : {};
       const posts = await db
         .collection("posts")
-        .find({ status: "active" })
+        .find({ status: "active", ...filter })
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
