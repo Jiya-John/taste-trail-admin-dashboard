@@ -39,6 +39,58 @@ export default function apiRoutes(db, upload) {
     res.json(await getSingleUser(db, req.params.id));
   });
 
+  // SIGNUP
+  router.post("/signup", async (req, res) => {
+    const { firstName, lastName, username, email, password, streetName, city, province, country, postalCode } = req.body;
+
+    //checking if existing user
+    const existing = await db.collection("users").findOne({ email });
+    if (existing) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, createdAt: new Date(), updatedAt: new Date() };
+    const result = await db.collection("users").insertOne(userDoc);
+
+    res.json({
+      _id: result.insertedId,
+      firstName,
+      lastName,
+      username,
+      email,
+      streetName,
+      city,
+      province,
+      country,
+      postalCode
+    });
+  });
+
+  // LOGIN
+  router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await db.collection("users").findOne({ email });
+    if (!user) return res.status(400).json({ error: "Invalid email" });
+
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) return res.status(400).json({ error: "Invalid password" });
+
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      streetName: user.streetName,
+      city: user.city,
+      province: user.province,
+      country: user.country,
+      postalCode: user.postalCode
+    });
+  }); 
+
   // GET all posts with search
   router.get("/posts", async (req, res) => {
     try {
