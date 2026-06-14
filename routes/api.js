@@ -20,14 +20,14 @@ export default function apiRoutes(db, upload) {
   // UPDATE user
   router.put("/users/:id", async (req, res) => {
     const updates = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      username: data.username,
-      streetName: data.streetName,
-      city: data.city,
-      province: data.province,
-      country: data.country,
-      postalCode: data.postalCode,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      streetName: req.body.streetName,
+      city: req.body.city,
+      province: req.body.province,
+      country: req.body.country,
+      postalCode: req.body.postalCode,
       updatedAt: new Date()
     }
 
