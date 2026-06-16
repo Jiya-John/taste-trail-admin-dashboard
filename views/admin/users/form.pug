@@ -47,10 +47,10 @@ block layout-content
       input.form-control(type="text", id="postalCode", name="postalCode", required, value=user.postalCode || "")
 
     .mb-3
-    label.form-label(for="status") Status
-    select.form-select(name="status", id="status")
-      option(value="active" selected=(user.status === "active")) Active
-      option(value="inactive" selected=(user.status === "inactive")) Inactive
+      label.form-label(for="status") Status
+      select.form-select(name="status", id="status")
+        option(value="active" selected=(user.status === "active")) Active
+        option(value="inactive" selected=(user.status === "inactive")) Inactive
 
     if !user._id
       .mb-3
