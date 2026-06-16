@@ -28,6 +28,7 @@ export default function apiRoutes(db, upload) {
       province: req.body.province,
       country: req.body.country,
       postalCode: req.body.postalCode,
+      status: req.body.status, 
       updatedAt: new Date()
     }
 
@@ -50,7 +51,7 @@ export default function apiRoutes(db, upload) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, createdAt: new Date(), updatedAt: new Date() };
+    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, status: "active", createdAt: new Date(), updatedAt: new Date() };
     const result = await db.collection("users").insertOne(userDoc);
 
     res.json({
@@ -76,6 +77,10 @@ export default function apiRoutes(db, upload) {
 
     const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) return res.status(400).json({ error: "Invalid password" });
+
+    if (user.status === "inactive") {
+      return res.status(403).json({ error: "Your account is inactive." });
+    }
 
     res.json({
       _id: user._id,

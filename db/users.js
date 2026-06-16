@@ -45,6 +45,7 @@ export async function editUser(db, id, data) {
     province: data.province,
     country: data.country,
     postalCode: data.postalCode,
+    status: data.status,
     updatedAt: new Date()
   };
 
