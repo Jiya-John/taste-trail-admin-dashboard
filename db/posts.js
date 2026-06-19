@@ -26,6 +26,7 @@ export async function addPost(db, data, file) {
     comment: data.comment,
     rating: data.rating,
     likesCount: parseInt(data.likesCount) || 0,
+    likedBy: [],
     status: "active",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -48,7 +49,6 @@ export async function editPost(db, id, data, file) {
     dishName: data.dishName,
     comment: data.comment,
     rating: data.rating,
-    likesCount: parseInt(data.likesCount) || 0, // ensures value is always a number. If not 0.
     updatedAt: new Date(),
   };
 

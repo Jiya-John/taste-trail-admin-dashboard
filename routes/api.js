@@ -160,5 +160,39 @@ export default function apiRoutes(db, upload) {
     }
   });
 
+  
+  // Like or unlike post
+  router.post("/posts/:id/like", async (req, res) => {
+    const { userId } = req.body;
+    const postId = req.params.id;
+
+    const post = await db.collection("posts").findOne({ _id: new ObjectId(postId) });
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    const alreadyLiked = post.likedBy?.includes(userId);
+
+    if (alreadyLiked) {
+      // Unlike
+      await db.collection("posts").updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $pull: { likedBy: userId },
+          $inc: { likesCount: -1 }
+        }
+      );
+      return res.json({ liked: false });
+    } else {
+      // Like
+      await db.collection("posts").updateOne(
+        { _id: new ObjectId(postId) },
+        {
+          $addToSet: { likedBy: userId },
+          $inc: { likesCount: 1 }
+        }
+      );
+      return res.json({ liked: true });
+    }
+  });
+
   return router;
 }
