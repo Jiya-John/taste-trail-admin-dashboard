@@ -26,6 +26,7 @@ export async function addUser(db, data) {
     country: data.country,
     postalCode: data.postalCode,
     passwordHash: hashedPassword,
+    favorites: [],
     status: "active",
     createdAt: new Date(),
     updatedAt: new Date()

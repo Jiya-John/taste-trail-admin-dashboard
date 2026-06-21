@@ -51,7 +51,7 @@ export default function apiRoutes(db, upload) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, status: "active", createdAt: new Date(), updatedAt: new Date() };
+    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, favorites: [], status: "active", createdAt: new Date(), updatedAt: new Date() };
     const result = await db.collection("users").insertOne(userDoc);
 
     res.json({
@@ -64,7 +64,8 @@ export default function apiRoutes(db, upload) {
       city,
       province,
       country,
-      postalCode
+      postalCode,
+      favorites: []
     });
   });
 
@@ -92,7 +93,8 @@ export default function apiRoutes(db, upload) {
       city: user.city,
       province: user.province,
       country: user.country,
-      postalCode: user.postalCode
+      postalCode: user.postalCode,
+      favorites: user.favorites
     });
   }); 
 
@@ -191,6 +193,33 @@ export default function apiRoutes(db, upload) {
         }
       );
       return res.json({ liked: true });
+    }
+  });
+
+  // Toggle favourite
+  router.post("/users/:id/favorites", async (req, res) => {
+    const userId = req.params.id;
+    const { postId } = req.body;
+
+    const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const alreadyFav = user.favorites?.includes(postId);
+
+    if (alreadyFav) {
+      // Remove from favorites
+      await db.collection("users").updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { favorites: postId } }
+      );
+      return res.json({ favorited: false });
+    } else {
+      // Add to favorites
+      await db.collection("users").updateOne(
+        { _id: new ObjectId(userId) },
+        { $addToSet: { favorites: postId } }
+      );
+      return res.json({ favorited: true });
     }
   });
 
