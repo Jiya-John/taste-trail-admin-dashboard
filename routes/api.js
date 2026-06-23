@@ -103,15 +103,22 @@ export default function apiRoutes(db, upload) {
       const skip = parseInt(req.query.skip) || 0;
       const limit = parseInt(req.query.limit) || 8;
       const q = req.query.q?.trim() || "";
-      const filter = q
-        ? {
-            $or: [
-              { restaurantName: { $regex: q, $options: "i" } },
-              { restaurantCity: { $regex: q, $options: "i" } },
-              { dishName: { $regex: q, $options: "i" } },
-            ],
-          }
-        : {};
+      const rating = req.query.rating ? parseInt(req.query.rating) : null;
+
+      const filter = {
+        status: "active",
+        ...(q
+          ? {
+              $or: [
+                { restaurantName: { $regex: q, $options: "i" } },
+                { restaurantCity: { $regex: q, $options: "i" } },
+                { dishName: { $regex: q, $options: "i" } },
+              ],
+            }
+          : {}),
+        ...(rating ? { rating } : {}),
+      }
+  
       const posts = await db
         .collection("posts")
         .find({ status: "active", ...filter })
