@@ -206,15 +206,23 @@ router.get("/users/:id/favorites", async (req, res) => {
 router.post("/favorites/toggle", async (req, res) => {
   const { userId, postId } = req.body;
 
-  const added = await addFavorite(db, userId, postId);
-  if (added) {
-    return res.json({ favorited: true });
-  } else {
+  const existing = await db.collection("favorites").findOne({
+    userId: new ObjectId(userId),
+    postId: new ObjectId(postId)
+  });
+
+  if (existing) {
     await removeFavorite(db, userId, postId);
-    return res.json({ favorited: false });
+    return res.json({ favorited: false }); 
+  } else {
+    await db.collection("favorites").insertOne({
+      userId: new ObjectId(userId),
+      postId: new ObjectId(postId),
+      createdAt: new Date()
+    });
+    return res.json({ favorited: true }); 
   }
 });
-
 
   return router;
 }
