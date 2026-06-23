@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { getUsers, getSingleUser, addUser, editUser, deleteUser, validateUser } from "../db/users.js";
 import { getPosts, getSinglePost, addPost, editPost, deletePost, validatePost } from "../db/posts.js";
+import { getFavoritesByUser, addFavorite, removeFavorite } from "../db/favorites.js";
 
 export default function apiRoutes(db, upload) {
   const router = express.Router();
@@ -51,7 +52,7 @@ export default function apiRoutes(db, upload) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, favorites: [], status: "active", createdAt: new Date(), updatedAt: new Date() };
+    const userDoc = { firstName, lastName, username, email, streetName, city, province, country, postalCode, passwordHash: hashedPassword, status: "active", createdAt: new Date(), updatedAt: new Date() };
     const result = await db.collection("users").insertOne(userDoc);
 
     res.json({
@@ -65,7 +66,6 @@ export default function apiRoutes(db, upload) {
       province,
       country,
       postalCode,
-      favorites: []
     });
   });
 
@@ -94,7 +94,6 @@ export default function apiRoutes(db, upload) {
       province: user.province,
       country: user.country,
       postalCode: user.postalCode,
-      favorites: user.favorites
     });
   }); 
 
@@ -196,32 +195,26 @@ export default function apiRoutes(db, upload) {
     }
   });
 
-  // Toggle favourite
-  router.post("/users/:id/favorites", async (req, res) => {
-    const userId = req.params.id;
-    const { postId } = req.body;
+  // Get all favorites for a user
+router.get("/users/:id/favorites", async (req, res) => {
+  const userId = req.params.id;
+  const favorites = await getFavoritesByUser(db, userId);
+  res.json(favorites);
+});
 
-    const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
-    if (!user) return res.status(404).json({ error: "User not found" });
+// Toggle favorite
+router.post("/favorites/toggle", async (req, res) => {
+  const { userId, postId } = req.body;
 
-    const alreadyFav = user.favorites?.includes(postId);
+  const added = await addFavorite(db, userId, postId);
+  if (added) {
+    return res.json({ favorited: true });
+  } else {
+    await removeFavorite(db, userId, postId);
+    return res.json({ favorited: false });
+  }
+});
 
-    if (alreadyFav) {
-      // Remove from favorites
-      await db.collection("users").updateOne(
-        { _id: new ObjectId(userId) },
-        { $pull: { favorites: postId } }
-      );
-      return res.json({ favorited: false });
-    } else {
-      // Add to favorites
-      await db.collection("users").updateOne(
-        { _id: new ObjectId(userId) },
-        { $addToSet: { favorites: postId } }
-      );
-      return res.json({ favorited: true });
-    }
-  });
 
   return router;
 }
