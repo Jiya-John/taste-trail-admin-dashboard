@@ -103,7 +103,7 @@ export default function apiRoutes(db, upload) {
       const skip = parseInt(req.query.skip) || 0;
       const limit = parseInt(req.query.limit) || 8;
       const q = req.query.q?.trim() || "";
-      const rating = req.query.rating ? parseInt(req.query.rating) : null;
+      const rating = req.query.rating || null;
 
       const filter = {
         status: "active",
