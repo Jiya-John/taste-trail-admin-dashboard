@@ -8,9 +8,21 @@ export default function managePosts(db, upload, requireAdmin) {
   
   // Manage Posts
   router.get("/", requireAdmin, async (req, res) => {
-    const posts = await getPosts(db);
+    const q = req.query.q?.trim() || "";
+
+    const filter = q
+      ? {
+          $or: [
+            { restaurantName: { $regex: q, $options: "i" } },
+            { dishName: { $regex: q, $options: "i" } },
+            { restaurantCity: { $regex: q, $options: "i" } }
+          ]
+        }
+      : {};
+
+    const posts = await db.collection("posts").find(filter).toArray();
     const users = await getUsers(db);
-    res.render("admin/posts/list", { title: "Manage Posts", posts, users });
+    res.render("admin/posts/list", { title: "Manage Posts", posts, users, q });
   });
 
   // Add posts

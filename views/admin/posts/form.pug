@@ -77,7 +77,6 @@ block layout-content
         option(value="active" selected=(post.status === "active")) Active
         option(value="inactive" selected=(post.status === "inactive")) Inactive
 
-    // Message area
     #status-message.mt-2(style="color: #c0392b;")
       if post.status === "inactive"
         | Post will be deleted from Taste Trail as status is inactive.

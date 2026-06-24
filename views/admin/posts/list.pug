@@ -4,6 +4,11 @@ block layout-content
   h1.mb-3 Posts
   a.btn.btn-primary.mb-3(href="/admin/posts/add") + Add Post
 
+  form.admin-search-form(method="get", action="/admin/posts", class="mb-3")
+    input.form-control(type="text", name="q", placeholder="Search posts…", value=q)
+    button.btn.btn-primary(type="submit") Search
+    if q
+      a.btn.btn-secondary(href="/admin/posts") Clear
   if posts.length
     table.table.table-striped.table-hover
       thead
@@ -50,4 +55,4 @@ block layout-content
               a.btn.btn-sm.btn-outline-secondary(href=`/admin/posts/edit?id=${post._id}`) Edit
               a.btn.btn-sm.btn-outline-secondary(href=`/admin/posts/delete?id=${post._id}`) Delete
   else
-    p.text-muted No posts found.
+    p.mt-2(style="color: #c0392b;") No posts found.
