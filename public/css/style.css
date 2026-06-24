@@ -44,3 +44,17 @@ a, .nav-link {
   object-fit: cover;
   border-radius: 4px; 
 }
+
+.admin-search-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.admin-search-form input {
+  flex: 1;
+}
+
+.admin-search-form button {
+  white-space: nowrap;
+}

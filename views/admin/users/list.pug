@@ -4,6 +4,12 @@ block layout-content
   h1.mb-3 Users
   a.btn.btn-primary.mb-3(href="/admin/users/add") + Add User
 
+  form.admin-search-form(method="get", action="/admin/users", class="mb-3")
+    input.form-control(type="text", name="q", placeholder="Search users…", value=q)
+    button.btn.btn-primary(type="submit") Search
+    if q
+      a.btn.btn-secondary(href="/admin/users") Clear
+
   if users.length
     table.table.table-striped.table-hover
       thead
@@ -31,4 +37,4 @@ block layout-content
               a.btn.btn-sm.btn-outline-secondary(href=`/admin/users/edit?id=${user._id}`) Edit
               a.btn.btn-sm.btn-outline-secondary(href=`/admin/users/delete?id=${user._id}`) Delete
   else
-    p.text-muted No users found.
+    p.mt-2(style="color: #c0392b;") No users found.

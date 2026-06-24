@@ -52,6 +52,12 @@ block layout-content
         option(value="active" selected=(user.status === "active")) Active
         option(value="inactive" selected=(user.status === "inactive")) Inactive
 
+    #status-message.mt-2(style="color: #c0392b;")
+      if user.status === "inactive"
+        | User will be deleted when status is inactive.
+      else if user.status === "active"
+        | Post will be added when status is active.
+
     if !user._id
       .mb-3
         label.form-label(for="password") Password
@@ -59,3 +65,20 @@ block layout-content
 
     button.btn.btn-primary(type="submit") Save
     a.btn.btn-secondary.ms-2(href="/admin/users") Cancel
+
+  script.
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const statusSelect = document.getElementById("status");
+      const msg = document.getElementById("status-message");
+
+      function updateStatusMessage() {
+        if (statusSelect.value === "inactive") {
+          msg.textContent = "User will be DELETED when status is inactive.";
+        } else {
+          msg.textContent = "User will be ADDED when status is active.";
+        }
+      }
+
+      statusSelect.addEventListener("change", updateStatusMessage);
+    });

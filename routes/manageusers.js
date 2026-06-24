@@ -7,8 +7,20 @@ export default function manageUsers(db, requireAdmin) {
 
   // Manage Users
   router.get("/", requireAdmin, async (req, res) => {
-    const users = await getUsers(db);
-    res.render("admin/users/list", { title: "Manage Users", users });
+    const q = req.query.q?.trim() || "";
+
+    const filter = q
+    ? {
+        $or: [
+          { fullName: { $regex: q, $options: "i" } },
+          { username: { $regex: q, $options: "i" } },
+          { email: { $regex: q, $options: "i" } }
+        ]
+      }
+    : {};
+
+    const users = await db.collection("users").find(filter).toArray();
+    res.render("admin/users/list", { title: "Manage Users", users, q });
   });
 
   // Add User
