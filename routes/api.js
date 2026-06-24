@@ -152,7 +152,7 @@ export default function apiRoutes(db, upload) {
 
   // UPDATE post
   router.put("/posts/:id", upload.single("photo"), async (req, res) => {
-    await editPost(db, req.body.id, { ...req.body, status: req.body.status || "active" }, req.file);
+    await editPost(db, req.params.id, { ...req.body, userId: req.body.userId, status: req.body.status || "active" }, req.file);
     res.json({ success: true });
   });
 
