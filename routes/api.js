@@ -74,10 +74,10 @@ export default function apiRoutes(db, upload) {
     const { email, password } = req.body;
 
     const user = await db.collection("users").findOne({ email });
-    if (!user) return res.status(400).json({ error: "Invalid email" });
+    if (!user) return res.status(400).json({ error: "Invalid email or password" });
 
     const match = await bcrypt.compare(password, user.passwordHash);
-    if (!match) return res.status(400).json({ error: "Invalid password" });
+    if (!match) return res.status(400).json({ error: "Invalid email or password" });
 
     if (user.status === "inactive") {
       return res.status(403).json({ error: "Your account is inactive." });
@@ -146,13 +146,13 @@ export default function apiRoutes(db, upload) {
 
   // CREATE post
   router.post("/posts", upload.single("photo"), async (req, res) => {
-    const result = await addPost(db, req.body, req.file);
+    const result = await addPost(db, { ...req.body, status: req.body.status || "active" }, req.file);
     res.json({ success: true, id: result });
   });
 
   // UPDATE post
   router.put("/posts/:id", upload.single("photo"), async (req, res) => {
-    await editPost(db, req.params.id, req.body, req.file);
+    await editPost(db, req.body.id, { ...req.body, status: req.body.status || "active" }, req.file);
     res.json({ success: true });
   });
 

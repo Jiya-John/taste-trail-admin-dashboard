@@ -27,7 +27,7 @@ export async function addPost(db, data, file) {
     rating: data.rating,
     likesCount: parseInt(data.likesCount) || 0,
     likedBy: [],
-    status: "active",
+    status: data.status || "active",
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -49,6 +49,7 @@ export async function editPost(db, id, data, file) {
     dishName: data.dishName,
     comment: data.comment,
     rating: data.rating,
+    status: data.status || "active",
     updatedAt: new Date(),
   };
 

@@ -71,5 +71,35 @@ block layout-content
       label.form-label(for="rating") Rating
       input.form-control(type="number", id="rating", name="rating", min="1", max="5", value=post.rating || "")
 
+    .mb-3
+      label.form-label(for="status") Status
+      select.form-select(name="status", id="status")
+        option(value="active" selected=(post.status === "active")) Active
+        option(value="inactive" selected=(post.status === "inactive")) Inactive
+
+    // Message area
+    #status-message.mt-2(style="color: #c0392b;")
+      if post.status === "inactive"
+        | Post will be deleted from Taste Trail as status is inactive.
+      else if post.status === "active"
+        | Post will be added to Taste Trail as status is active.
+        
     button.btn.btn-primary(type="submit") Save
     a.btn.btn-secondary.ms-2(href="/admin/posts") Cancel
+
+  script.
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const statusSelect = document.getElementById("status");
+      const msg = document.getElementById("status-message");
+
+      function updateStatusMessage() {
+        if (statusSelect.value === "inactive") {
+          msg.textContent = "Post will be DELETED from Taste Trail when status is inactive.";
+        } else {
+          msg.textContent = "Post will be ADDED to Taste Trail when status is active.";
+        }
+      }
+
+      statusSelect.addEventListener("change", updateStatusMessage);
+    });
